@@ -11,6 +11,13 @@ NC='\033[0m'
 SCRIPT_DIR=$(CDPATH= cd -- "$(dirname "$0")" && pwd)
 ROOT_DIR=$(CDPATH= cd -- "$SCRIPT_DIR/.." && pwd)
 
+print_section_header() {
+  title="$1"
+  printf "==============================\n"
+  printf "# %s\n" "$title"
+  printf "==============================\n"
+}
+
 # Sets $chapter, $num, $lang from CLI arguments.
 # Calls print_help (defined by the caller) on --help/-h.
 parse_args() {
@@ -37,17 +44,29 @@ parse_args() {
 # Iterates over matched chapter/problem directories, calling $1 with (num_dir, num_name).
 each_problem() {
   callback="$1"
+  current_chapter=""
+
   for chapter_dir in "$ROOT_DIR"/chapters/pc*; do
     [ -d "$chapter_dir" ] || continue
     if [ -n "$chapter" ] && [ "$(basename "$chapter_dir")" != "$chapter" ]; then
       continue
     fi
+
+    chapter_name=$(basename "$chapter_dir")
+    if [ "$chapter_name" != "$current_chapter" ]; then
+      [ -n "$current_chapter" ] && printf "\n"
+      print_section_header "Chapter $chapter_name"
+      current_chapter="$chapter_name"
+    fi
+
     for num_dir in "$chapter_dir"/pc*; do
       [ -d "$num_dir" ] || continue
       num_name=$(basename "$num_dir")
       if [ -n "$num" ] && [ "$num_name" != "$num" ]; then
         continue
       fi
+
+      print_section_header "Problem $num_name"
       "$callback" "$num_dir" "$num_name"
     done
   done

@@ -89,19 +89,27 @@ run_one() {
 test_problem() {
   num_dir="$1"; num_name="$2"
   if [ "$lang" = all ] || [ "$lang" = c ]; then
-    [ -d "$num_dir/c" ] && run_one c "$num_dir" "$num_name"
+    if [ -d "$num_dir/c" ]; then
+      run_one c "$num_dir" "$num_name"
+    fi
   fi
 
   if [ "$lang" = all ] || [ "$lang" = cpp ]; then
-    [ -d "$num_dir/cpp" ] && run_one cpp "$num_dir" "$num_name"
+    if [ -d "$num_dir/cpp" ]; then
+      run_one cpp "$num_dir" "$num_name"
+    fi
   fi
 
   if [ "$lang" = all ] || [ "$lang" = java ]; then
-    [ -d "$num_dir/java" ] && run_one java "$num_dir" "$num_name"
+    if [ -d "$num_dir/java" ]; then
+      run_one java "$num_dir" "$num_name"
+    fi
   fi
 
   if [ "$lang" = all ] || [ "$lang" = python ]; then
-    [ -d "$num_dir/python" ] && run_one python "$num_dir" "$num_name"
+    if [ -d "$num_dir/python" ]; then
+      run_one python "$num_dir" "$num_name"
+    fi
   fi
 }
 
